@@ -1,0 +1,16 @@
+<section class="phx-hero">
+  <h1>Messages</h1>
+</section>
+
+<section class="row">
+  <h2>List of messages</h2>
+  <ul>
+    <%= for message <- @messages do %>
+        <li>
+          <article>
+            <%= message.subject %>
+          </article>
+        </li>
+    <% end %>
+  </ul>
+</section>
