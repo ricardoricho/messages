@@ -3,7 +3,7 @@ defmodule MessagesWeb.MessageControllerTest do
 
   test "GET /messages", %{conn: conn} do
     conn = get(conn, Routes.message_path(conn, :index))
-    assert html_response(conn, 200) =~ "List of messages"
+    assert html_response(conn, 200) =~ "Messages"
   end
 
   test "GET /messages (with data)", %{conn: conn} do
@@ -20,8 +20,8 @@ defmodule MessagesWeb.MessageControllerTest do
   test "GET /new", %{conn: conn} do
     conn = get(conn, Routes.message_path(conn, :new))
     response = html_response(conn, 200)
-    assert response =~ "Subject:"
-    assert response =~ "Body:"
+    assert response =~ "Subject"
+    assert response =~ "Body"
   end
 
   test "POST /messages", %{conn: conn} do
@@ -36,5 +36,13 @@ defmodule MessagesWeb.MessageControllerTest do
     conn = delete(conn, Routes.message_path(conn, :delete, message))
     response = html_response(conn, 302)
     assert response =~ "/messages"
+  end
+
+  test "GET /messages/:id", %{conn: conn} do
+    {:ok, message } = Messages.Message.create(%{subject: "Show", body: "Show me the message"})
+    conn = get(conn, Routes.message_path(conn, :show, message))
+    response = html_response(conn, 200)
+    assert response =~ message.subject
+    assert response =~ message.body
   end
 end

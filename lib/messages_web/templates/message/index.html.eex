@@ -1,16 +1,30 @@
-<section class="phx-hero">
+<section class="row">
   <h1>Messages</h1>
+  <%= link to: Routes.message_path(@conn, :new) do %>
+  <button class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i>
+    New message
+  </button>
+  <% end %>
 </section>
 
-<section class="row">
-  <h2>List of messages</h2>
-  <ul>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Subject</th>
+      <th scope="col">Body</th>
+    </tr>
+  </thead>
+  <tbody>
     <%= for message <- @messages do %>
-        <li>
-          <article>
-            <%= message.subject %>
-          </article>
-        </li>
+        <tr>
+          <th scope="row"><%= message.id %></th>
+          <th>
+            <%= link(message.subject, to: Routes.message_path(@conn, :show, message)) %>
+          </th>
+          <th> To be truncate... <%= message.body %></th>
+        </tr>
     <% end %>
-  </ul>
-</section>
+  </tbody>
+</table>

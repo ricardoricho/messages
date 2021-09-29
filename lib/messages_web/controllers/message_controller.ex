@@ -15,6 +15,11 @@ defmodule MessagesWeb.MessageController do
     end
   end
 
+  def show(conn, %{ "id" => id}) do
+    message = Messages.Message.get_message!(id)
+    render(conn, "show.html", message: message)
+  end
+
   def new(conn, _params) do
     message = Messages.Message.new()
     render(conn, "new.html", message: message)

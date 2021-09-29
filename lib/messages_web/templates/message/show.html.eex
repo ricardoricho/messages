@@ -1,0 +1,25 @@
+<section class="phx-hero">
+  <h1>
+    Message
+    <small class="text-muted"> #<%= @message.id %></small>
+  </h1>
+</section>
+
+<section class="row">
+  Subject:
+  <figure>
+    <blockquote class="blockquote">
+      <%= @message.subject %>
+    </blockquote>
+  </figure>
+</section>
+
+</section>
+<section class="row">
+  Body:
+  <figure>
+    <blockquote class="blockquote">
+      <%= @message.body %>
+    </blockquote>
+  </figure>
+</section>
