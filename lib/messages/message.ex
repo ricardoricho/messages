@@ -29,4 +29,13 @@ defmodule Messages.Message do
     |> cast(params, [:subject, :body])
     |> validate_required([:subject, :body])
   end
+
+  def get_message!(id) do
+    Messages.Message
+    |> Messages.Repo.get!(id)
+  end
+
+  def delete_message(message) do
+    Messages.Repo.delete(message)
+  end
 end

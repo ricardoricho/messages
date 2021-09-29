@@ -24,10 +24,17 @@ defmodule MessagesWeb.MessageControllerTest do
     assert response =~ "Body:"
   end
 
-  # test "POST /messages", %{conn: conn} do
-  #   data = %{ subject: "Subject", body: "Message body"}
-  #   conn = post(conn, Routes.message_path(conn, :create), message: data)
-  #   response = html_response(conn, 302)
-  #   assert response =~ "/messages"
-  # end
+  test "POST /messages", %{conn: conn} do
+    data = %{ subject: "Subject", body: "Message body"}
+    conn = post(conn, Routes.message_path(conn, :create), message: data)
+    response = html_response(conn, 302)
+    assert response =~ "/messages"
+  end
+
+  test "DELETE /messages/:id", %{conn: conn} do
+    {:ok, message} = Messages.Message.create(%{subject: "Deleteme", body: "Deleted body"})
+    conn = delete(conn, Routes.message_path(conn, :delete, message))
+    response = html_response(conn, 302)
+    assert response =~ "/messages"
+  end
 end
