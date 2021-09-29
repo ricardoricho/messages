@@ -1,0 +1,16 @@
+<section class="phx-hero">
+  <h1>New Message</h1>
+</section>
+
+<section class="row">
+  <%= form_for @message, Routes.message_path(@conn, :create), fn f -> %>
+  <label>
+    Subject:
+    <%= text_input f, :subject, class: "form-control" %>
+  </label>
+  <label>
+    Body:
+    <%= text_input f, :body, class: "form-control" %>
+  </label>
+  <% end %>
+</section>

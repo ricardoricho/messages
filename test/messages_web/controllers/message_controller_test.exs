@@ -17,6 +17,13 @@ defmodule MessagesWeb.MessageControllerTest do
     assert response =~ message2.subject
   end
 
+  test "GET /new", %{conn: conn} do
+    conn = get(conn, Routes.message_path(conn, :new))
+    response = html_response(conn, 200)
+    assert response =~ "Subject:"
+    assert response =~ "Body:"
+  end
+
   # test "POST /messages", %{conn: conn} do
   #   data = %{ subject: "Subject", body: "Message body"}
   #   conn = post(conn, Routes.message_path(conn, :create), message: data)

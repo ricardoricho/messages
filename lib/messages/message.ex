@@ -1,5 +1,6 @@
 defmodule Messages.Message do
   use Ecto.Schema
+  import Ecto.Changeset
   alias Messages.Repo
 
   schema "messages" do
@@ -18,9 +19,14 @@ defmodule Messages.Message do
     |> Repo.all()
   end
 
+  def new do
+    %Messages.Message{}
+    |> changeset(%{})
+  end
+
   def changeset(message, params) do
     message
-    |> Ecto.Changeset.cast(params, [:subject, :body])
-    |> Ecto.Changeset.validate_required([:subject, :body])
+    |> cast(params, [:subject, :body])
+    |> validate_required([:subject, :body])
   end
 end
