@@ -14,9 +14,10 @@ defmodule Messages.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Messages.PubSub},
       # Start the Endpoint (http/https)
-      MessagesWeb.Endpoint
+      MessagesWeb.Endpoint,
       # Start a worker by calling: Messages.Worker.start_link(arg)
       # {Messages.Worker, arg}
+      {Messages.Slack, name: Messages.Slack}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

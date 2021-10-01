@@ -1,4 +1,5 @@
 defmodule MessagesWeb.MessageControllerTest do
+  import Mox
   use MessagesWeb.ConnCase
 
   test "GET /messages", %{conn: conn} do
@@ -25,6 +26,7 @@ defmodule MessagesWeb.MessageControllerTest do
   end
 
   test "POST /messages", %{conn: conn} do
+    expect(Messages.SlackMock, :push, fn a -> {:ok, a} end)
     data = %{ subject: "Subject", body: "Message body"}
     conn = post(conn, Routes.message_path(conn, :create), message: data)
     response = html_response(conn, 302)

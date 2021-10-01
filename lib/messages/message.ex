@@ -5,6 +5,8 @@ defmodule Messages.Message do
   schema "messages" do
     field :subject, :string
     field :body, :string
+
+    has_one :slack_message, Messages.SlackMessage
   end
 
   def create(attrs) do
@@ -37,6 +39,10 @@ defmodule Messages.Message do
     String.length(message.body)
     |> min(max)
     |> adjust_slice_parameters(0, message.body)
+  end
+
+  def slack_format(message) do
+    "Subject: #{message.subject} \n#{message.body}"
   end
 
   defp adjust_slice_parameters(max, 0, message) do

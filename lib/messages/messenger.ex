@@ -3,7 +3,7 @@ defmodule Messages.Messenger do
     %Messages.Message{}
     |> Messages.Message.changeset(attrs)
     |> Messages.Repo.insert
-    # |> Messages.Slack.create
+    |> create_in_slack
   end
 
   def all_messages() do
@@ -22,5 +22,22 @@ defmodule Messages.Messenger do
   def delete_message(id) do
     get_message!(id)
     |> Messages.Message.delete
+    |> delete_from_slack
+  end
+
+  def create_in_slack({:ok, message}) do
+    slack_app().push(message)
+  end
+
+  def delete_from_slack({:ok, message}) when message.slack_message do
+    slack_app().delete(message.slack_message.id)
+  end
+
+  def delete_from_slack({:ok, message}) do
+    {:ok, message}
+  end
+
+  def slack_app do
+    Application.get_env(:messages, :slack_app)
   end
 end

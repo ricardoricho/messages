@@ -72,3 +72,9 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Slack
+# config :messages, slack_token:
+config :messages, slack_app: Messages.Slack
+config :messages, slack_url: "https://slack.com/api/"
+config :messages, http_client: HTTPoison
