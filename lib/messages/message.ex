@@ -32,4 +32,14 @@ defmodule Messages.Message do
   def delete(message) do
     Messages.Repo.delete(message)
   end
+
+  def short_body(message, max) do
+    String.length(message.body)
+    |> min(max)
+    |> adjust_slice_parameters(0, message.body)
+  end
+
+  defp adjust_slice_parameters(max, 0, message) do
+    String.slice(message, 0, max) <> "..."
+  end
 end

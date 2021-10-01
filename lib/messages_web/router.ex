@@ -16,8 +16,8 @@ defmodule MessagesWeb.Router do
   scope "/", MessagesWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
     resources "/messages", MessageController
+    get "/", MessageController, :index
   end
 
   # Other scopes may use custom stacks.

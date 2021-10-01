@@ -9,8 +9,10 @@ defmodule MessagesWeb.MessageController do
 
   def create(conn, %{ "message" => message_params }) do
     case Messenger.create_message(message_params) do
-      { :ok, _message } ->
-        redirect(conn, to: Routes.message_path(conn, :index))
+      { :ok, message } ->
+        conn
+        |> put_flash(:info, "Message #{message.id} created")
+        |> redirect(to: Routes.message_path(conn, :index))
       { :error, changeset } ->
         render(conn, "new.html", message: changeset)
     end
@@ -28,7 +30,10 @@ defmodule MessagesWeb.MessageController do
 
   def delete(conn, %{"id" => id}) do
     case Messages.Messenger.delete_message(id) do
-      {:ok, _message} -> redirect(conn, to: Routes.message_path(conn, :index))
+      {:ok, _message} ->
+        conn
+        |> put_flash(:info, "Message deleted")
+        |> redirect(to: Routes.message_path(conn, :index))
     end
   end
 end
