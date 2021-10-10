@@ -41,6 +41,7 @@ defmodule Messages.SlackWebTest do
                                                           slack_message: "Slack message",
                                                           slack_channel: "C02BE91L",
                                                           message_id: message.id})
-    SlackWeb.delete(slack_message.slack_timestamp)
+    response = SlackWeb.delete(slack_message)
+    assert("C024BE91L" = response["channel"])
   end
 end

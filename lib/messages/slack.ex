@@ -1,4 +1,5 @@
 defmodule Messages.Slack do
+  @behaviour Messages.SlackBehaviour
   use GenServer
   alias Messages.SlackWeb
 
@@ -10,14 +11,14 @@ defmodule Messages.Slack do
     GenServer.start_link(__MODULE__, "", options)
   end
 
-  def push({:ok, message}) do
+  def push(message) do
     GenServer.call(Messages.Slack, {:push, message})
     {:ok, message}
   end
 
-  def delete(message_id) do
-    GenServer.call(Messages.Slack, {:delete, message_id})
-    {:ok, message_id}
+  def delete(message) do
+    GenServer.call(Messages.Slack, {:delete, message})
+    {:ok, message}
   end
 
   def handle_call({:push, message}, _from, state) do

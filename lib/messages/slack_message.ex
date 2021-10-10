@@ -10,6 +10,11 @@ defmodule Messages.SlackMessage do
     belongs_to :message, Messages.Message
   end
 
+  def find_by_message(message) do
+    Messages.SlackMessage
+    |> Messages.Repo.get_by(message_id: message.id)
+  end
+
   def changeset(slack_message, params) do
     slack_message
     |> cast(params, [:slack_timestamp, :slack_message, :message_id, :slack_channel])
@@ -30,13 +35,11 @@ defmodule Messages.SlackMessage do
              "slack_channel" => response["channel"],
              "slack_message" => slack_response.body,
              "message_id" => message_id})
-      # {:error, response} -> {:error, response}
     end
   end
 
   def delete_confirmation({:ok, slack_response}) do
-    case Jason.decode(slack_response.body) do
-      {:ok, response} -> true = response["ok"]
-    end
+    slack_response.body
+    |> Jason.decode!
   end
 end

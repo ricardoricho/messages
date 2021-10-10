@@ -35,6 +35,11 @@ defmodule MessagesWeb.MessageControllerTest do
 
   test "DELETE /messages/:id", %{conn: conn} do
     {:ok, message} = Messages.Message.create(%{subject: "Deleteme", body: "Deleted body"})
+    {:ok, _} = Messages.SlackMessage.create(%{slack_timestamp: "timestamp",
+                                              slack_message: "message",
+                                              slack_channel: "channel",
+                                              message_id: message.id})
+    expect(Messages.SlackMock, :delete, fn _ -> {:ok, "{\"ok\": true}"} end)
     conn = delete(conn, Routes.message_path(conn, :delete, message))
     response = html_response(conn, 302)
     assert response =~ "/messages"

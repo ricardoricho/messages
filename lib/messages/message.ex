@@ -1,10 +1,12 @@
 defmodule Messages.Message do
   use Ecto.Schema
+  import Ecto.Query
   import Ecto.Changeset
 
   schema "messages" do
     field :subject, :string
     field :body, :string
+    field :deleted_at, :utc_datetime
 
     has_one :slack_message, Messages.SlackMessage
   end
@@ -20,9 +22,15 @@ defmodule Messages.Message do
     |> Messages.Repo.all()
   end
 
+  def not_deleted() do
+    Messages.Message
+    |> Ecto.Query.where([message], is_nil(message.deleted_at))
+    |> Messages.Repo.all
+  end
+
   def changeset(message, params) do
     message
-    |> cast(params, [:subject, :body])
+    |> cast(params, [:subject, :body, :deleted_at])
     |> validate_required([:subject, :body])
   end
 
@@ -43,6 +51,11 @@ defmodule Messages.Message do
 
   def slack_format(message) do
     "Subject: #{message.subject} \n#{message.body}"
+  end
+
+  def soft_delete(message, time \\ DateTime.utc_now()) do
+    Messages.Message.changeset(message, %{deleted_at: time})
+    |> Messages.Repo.update
   end
 
   defp adjust_slice_parameters(max, 0, message) do

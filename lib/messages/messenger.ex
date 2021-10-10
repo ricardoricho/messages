@@ -7,7 +7,7 @@ defmodule Messages.Messenger do
   end
 
   def all_messages() do
-    Messages.Message.all()
+    Messages.Message.not_deleted()
   end
 
   def new_message() do
@@ -20,21 +20,24 @@ defmodule Messages.Messenger do
   end
 
   def delete_message(id) do
-    get_message!(id)
-    |> Messages.Message.delete
-    |> delete_from_slack
+   get_message!(id)
+   |> Messages.Message.soft_delete
+   |> delete_from_slack
   end
 
   def create_in_slack({:ok, message}) do
     slack_app().push(message)
   end
-
-  def delete_from_slack({:ok, message}) when message.slack_message do
-    slack_app().delete(message.slack_message.id)
+  def create_in_slack({:error, message}) do
+    {:error, message}
   end
 
-  def delete_from_slack({:ok, message}) do
-    {:ok, message}
+  def delete_from_slack({:ok, message})  do
+    case Messages.SlackMessage.find_by_message(message) do
+      nil -> {:ok, message}
+      slack_message ->
+        slack_app().delete(slack_message)
+    end
   end
 
   def slack_app do

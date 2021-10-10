@@ -17,8 +17,8 @@ defmodule Messages.SlackWeb do
     |> Messages.Repo.insert
   end
 
-  def delete(timestamp) do
-    http_client().post(delete_message_url(), delete_payload(timestamp), post_headers())
+  def delete(message) do
+    http_client().post(delete_message_url(), delete_payload(message), post_headers())
     |> Messages.SlackMessage.delete_confirmation
   end
 
@@ -29,11 +29,13 @@ defmodule Messages.SlackWeb do
   end
 
   def payload(message) do
-    "{ \"channel\": \"messenger\", \"text\": \"#{message}\"}"
+    %{channel: "messenger", text: message}
+    |> Jason.encode!
   end
 
-  def delete_payload(timestamp) do
-    "{ \"channel\": \"messenger\", \"ts\": \"#{timestamp}\"}"
+  def delete_payload(message) do
+    %{channel: message.slack_channel, ts: message.slack_timestamp}
+    |> Jason.encode!
   end
 
   def post_message_url do
