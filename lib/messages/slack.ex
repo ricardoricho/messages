@@ -25,7 +25,7 @@ defmodule Messages.Slack do
     {:reply, SlackWeb.push(message.id, Messages.Message.slack_format(message)), state}
   end
 
-  def handle_call({:delete, message_id}, _from, staFte) do
+  def handle_call({:delete, message_id}, _from, state) do
     {:reply, SlackWeb.delete(message_id), state}
   end
 

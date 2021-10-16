@@ -8,10 +8,12 @@ defmodule MessagesWeb.MessageControllerTest do
   end
 
   test "GET /messages (with data)", %{conn: conn} do
-    { :ok, message1 } = Messages.Message.create(
-      %{ subject: "Message 1 subject", body: "Message 1 body"})
-    { :ok, message2 } = Messages.Message.create(
-      %{ subject: "Message 2 subject", body: "Message 2 body"})
+    {:ok, message1} =
+      Messages.Message.create(%{subject: "Message 1 subject", body: "Message 1 body"})
+
+    {:ok, message2} =
+      Messages.Message.create(%{subject: "Message 2 subject", body: "Message 2 body"})
+
     conn = get(conn, Routes.message_path(conn, :index))
     response = html_response(conn, 200)
     assert response =~ message1.subject
@@ -27,7 +29,7 @@ defmodule MessagesWeb.MessageControllerTest do
 
   test "POST /messages", %{conn: conn} do
     expect(Messages.SlackMock, :push, fn a -> {:ok, a} end)
-    data = %{ subject: "Subject", body: "Message body"}
+    data = %{subject: "Subject", body: "Message body"}
     conn = post(conn, Routes.message_path(conn, :create), message: data)
     response = html_response(conn, 302)
     assert response =~ "/messages"
@@ -35,10 +37,15 @@ defmodule MessagesWeb.MessageControllerTest do
 
   test "DELETE /messages/:id", %{conn: conn} do
     {:ok, message} = Messages.Message.create(%{subject: "Deleteme", body: "Deleted body"})
-    {:ok, _} = Messages.SlackMessage.create(%{slack_timestamp: "timestamp",
-                                              slack_message: "message",
-                                              slack_channel: "channel",
-                                              message_id: message.id})
+
+    {:ok, _} =
+      Messages.SlackMessage.create(%{
+        slack_timestamp: "timestamp",
+        slack_message: "message",
+        slack_channel: "channel",
+        message_id: message.id
+      })
+
     expect(Messages.SlackMock, :delete, fn _ -> {:ok, "{\"ok\": true}"} end)
     conn = delete(conn, Routes.message_path(conn, :delete, message))
     response = html_response(conn, 302)
@@ -46,7 +53,7 @@ defmodule MessagesWeb.MessageControllerTest do
   end
 
   test "GET /messages/:id", %{conn: conn} do
-    {:ok, message } = Messages.Message.create(%{subject: "Show", body: "Show me the message"})
+    {:ok, message} = Messages.Message.create(%{subject: "Show", body: "Show me the message"})
     conn = get(conn, Routes.message_path(conn, :show, message))
     response = html_response(conn, 200)
     assert response =~ message.subject

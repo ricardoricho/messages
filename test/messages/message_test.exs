@@ -9,7 +9,7 @@ defmodule Messages.MessageTest do
   test "not_deleted" do
     params = %{subject: "subject", body: "body"}
     {:ok, message} = Message.create(params)
-    {:ok, deleted_message} = Message.create(Map.merge(params, %{deleted_at: DateTime.utc_now}))
+    {:ok, deleted_message} = Message.create(Map.merge(params, %{deleted_at: DateTime.utc_now()}))
     messages = Messages.Message.not_deleted()
     assert Enum.member?(messages, message)
     refute Enum.member?(messages, deleted_message)
@@ -22,8 +22,8 @@ defmodule Messages.MessageTest do
   end
 
   test "soft_delete" do
-    {:ok, message } = Message.create(%{subject: "subject", body: "body"})
-    {:ok, deleted_message } = Message.soft_delete(message)
+    {:ok, message} = Message.create(%{subject: "subject", body: "body"})
+    {:ok, deleted_message} = Message.soft_delete(message)
     assert deleted_message.deleted_at
   end
 end
