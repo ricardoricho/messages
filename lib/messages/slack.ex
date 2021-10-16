@@ -22,18 +22,16 @@ defmodule Messages.Slack do
   end
 
   def handle_call({:push, message}, _from, state) do
-    { :reply,
-      SlackWeb.push(message.id, Messages.Message.slack_format(message)),
-      state }
+    {:reply, SlackWeb.push(message.id, Messages.Message.slack_format(message)), state}
   end
 
-  def handle_call({:delete, message_id}, _from, state) do
-    {:reply, SlackWeb.delete(message_id), state }
+  def handle_call({:delete, message_id}, _from, staFte) do
+    {:reply, SlackWeb.delete(message_id), state}
   end
 
   def handle_cast({:push, message}, state) do
     SlackWeb.push(message.id, Messages.Message.slack_format(message))
-    {:noreply, state }
+    {:noreply, state}
   end
 
   def handle_cast({:delete, message_id}, state) do

@@ -24,22 +24,26 @@ defmodule Messages.SlackMessage do
   def create(params) do
     %Messages.SlackMessage{}
     |> changeset(params)
-    |> Messages.Repo.insert
+    |> Messages.Repo.insert()
   end
 
   def push_confirmation({:ok, slack_response}, message_id) do
     case Jason.decode(slack_response.body) do
       {:ok, response} ->
-        Messages.SlackMessage.changeset(%Messages.SlackMessage{},
-          %{ "slack_timestamp" => response["ts"],
-             "slack_channel" => response["channel"],
-             "slack_message" => slack_response.body,
-             "message_id" => message_id})
+        Messages.SlackMessage.changeset(
+          %Messages.SlackMessage{},
+          %{
+            "slack_timestamp" => response["ts"],
+            "slack_channel" => response["channel"],
+            "slack_message" => slack_response.body,
+            "message_id" => message_id
+          }
+        )
     end
   end
 
   def delete_confirmation({:ok, slack_response}) do
     slack_response.body
-    |> Jason.decode!
+    |> Jason.decode!()
   end
 end
