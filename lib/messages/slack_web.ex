@@ -14,28 +14,30 @@ defmodule Messages.SlackWeb do
   def push(message_id, text) do
     http_client().post(post_message_url(), payload(text), post_headers())
     |> Messages.SlackMessage.push_confirmation(message_id)
-    |> Messages.Repo.insert
+    |> Messages.Repo.insert()
   end
 
   def delete(message) do
     http_client().post(delete_message_url(), delete_payload(message), post_headers())
-    |> Messages.SlackMessage.delete_confirmation
+    |> Messages.SlackMessage.delete_confirmation()
   end
 
   def post_headers do
-    [{ "Content-Type","application/json" },
-     { "Accept", "application/json;charset=UTF-8"},
-     { "Authorization","Bearer #{authorization_token()}" }]
+    [
+      {"Content-Type", "application/json"},
+      {"Accept", "application/json;charset=UTF-8"},
+      {"Authorization", "Bearer #{authorization_token()}"}
+    ]
   end
 
   def payload(message) do
     %{channel: "messenger", text: message}
-    |> Jason.encode!
+    |> Jason.encode!()
   end
 
   def delete_payload(message) do
     %{channel: message.slack_channel, ts: message.slack_timestamp}
-    |> Jason.encode!
+    |> Jason.encode!()
   end
 
   def post_message_url do

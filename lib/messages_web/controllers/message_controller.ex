@@ -7,18 +7,19 @@ defmodule MessagesWeb.MessageController do
     render(conn, "index.html", messages: messages)
   end
 
-  def create(conn, %{ "message" => message_params }) do
+  def create(conn, %{"message" => message_params}) do
     case Messenger.create_message(message_params) do
-      { :ok, message } ->
+      {:ok, message} ->
         conn
         |> put_flash(:info, "Message #{message.id} created")
         |> redirect(to: Routes.message_path(conn, :index))
-      { :error, changeset } ->
+
+      {:error, changeset} ->
         render(conn, "new.html", message: changeset)
     end
   end
 
-  def show(conn, %{ "id" => id}) do
+  def show(conn, %{"id" => id}) do
     message = Messenger.get_message!(id)
     render(conn, "show.html", message: message)
   end

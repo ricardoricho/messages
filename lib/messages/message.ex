@@ -14,7 +14,7 @@ defmodule Messages.Message do
   def create(attrs) do
     %Messages.Message{}
     |> changeset(attrs)
-    |> Messages.Repo.insert
+    |> Messages.Repo.insert()
   end
 
   def all() do
@@ -25,7 +25,7 @@ defmodule Messages.Message do
   def not_deleted() do
     Messages.Message
     |> Ecto.Query.where([message], is_nil(message.deleted_at))
-    |> Messages.Repo.all
+    |> Messages.Repo.all()
   end
 
   def changeset(message, params) do
@@ -55,7 +55,7 @@ defmodule Messages.Message do
 
   def soft_delete(message, time \\ DateTime.utc_now()) do
     Messages.Message.changeset(message, %{deleted_at: time})
-    |> Messages.Repo.update
+    |> Messages.Repo.update()
   end
 
   defp adjust_slice_parameters(max, 0, message) do
